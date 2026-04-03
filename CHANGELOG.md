@@ -7,16 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-04-03
+
+### Fixed
+
+- Banner version now reads from package.json dynamically (was hardcoded)
+- Base64 encode IOC strings in rule files to prevent macOS XProtect false positives
+- Use Node 24 in publish workflow (npm 11.x with native OIDC support)
+
 ## [1.0.2] - 2026-04-03
 
 ### Fixed
 
 - Updated README with correct architecture, Node >=20 requirement, and package manager support table
 - Fixed Node version references in CONTRIBUTING.md and CHANGELOG.md (18 → 20)
-- Removed `NODE_AUTH_TOKEN` from publish workflow — uses OIDC Trusted Publisher
+- OIDC Trusted Publisher for npm (no token secrets needed)
 - Dropped Node 18 from CI matrix (Vitest v4 requires Node 20+)
 - Linked LICENSE file in README
-- Fixed npm publish workflow to use OIDC trusted publishing (npm >= 11.5.1)
 
 ## [1.0.0] - 2026-04-03
 

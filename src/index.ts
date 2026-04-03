@@ -4,6 +4,7 @@ import type { Rule } from './types.js';
 import {
   parseArgs,
   loadRules,
+  readJSON,
   findProjects,
   getCommonProjectDirs,
   prompt,
@@ -14,8 +15,9 @@ import { scan } from './scanner.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const RULES_DIR = join(__dirname, '..', 'rules');
+const PKG_JSON_PATH = join(__dirname, '..', 'package.json');
 
-const VERSION = '1.0.0';
+const VERSION = readJSON<{ version: string }>(PKG_JSON_PATH)?.version ?? '0.0.0';
 
 const HELP_TEXT = `
 ${ui.c.white}supply-scan${ui.c.reset} — Universal npm supply chain attack scanner
@@ -72,7 +74,7 @@ export async function run(argv: string[]): Promise<void> {
 
   // Handle --list
   if (opts.list) {
-    ui.banner(allRules.length);
+    ui.banner(allRules.length, VERSION);
     ui.printRuleList(allRules);
     process.exit(0);
   }
@@ -89,12 +91,12 @@ export async function run(argv: string[]): Promise<void> {
     selectedRules = allRules;
   } else {
     // Interactive: show banner and rule selection
-    ui.banner(allRules.length);
+    ui.banner(allRules.length, VERSION);
     selectedRules = await interactiveRuleSelection(allRules);
   }
 
   if (!opts.ci && (opts.all || opts.rules.length > 0)) {
-    ui.banner(selectedRules.length);
+    ui.banner(selectedRules.length, VERSION);
   }
 
   // Determine scan directories

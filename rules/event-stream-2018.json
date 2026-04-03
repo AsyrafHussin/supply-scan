@@ -9,14 +9,23 @@
   ],
   "packages": {
     "compromised": {
-      "event-stream": ["3.3.6"]
+      "event-stream": [
+        "3.3.6"
+      ]
     },
     "malicious": {
-      "flatmap-stream": ["0.1.1"]
+      "flatmap-stream": [
+        "0.1.1"
+      ]
     }
   },
   "ioc": {
-    "ips": ["111.90.151.134"],
-    "domains": ["copayapi.host"]
-  }
+    "ips": [
+      "MTExLjkwLjE1MS4xMzQ="
+    ],
+    "domains": [
+      "Y29wYXlhcGkuaG9zdA=="
+    ]
+  },
+  "encoded": true
 }

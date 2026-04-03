@@ -10,22 +10,54 @@
   ],
   "packages": {
     "compromised": {
-      "axios": ["1.14.1", "0.30.4"]
+      "axios": [
+        "1.14.1",
+        "0.30.4"
+      ]
     },
     "malicious": {
-      "plain-crypto-js": ["4.2.0", "4.2.1"]
+      "plain-crypto-js": [
+        "4.2.0",
+        "4.2.1"
+      ]
     }
   },
   "ioc": {
     "files": {
-      "darwin": ["/Library/Caches/com.apple.act.mond", "/tmp/6202033"],
-      "linux": ["/tmp/ld.py"],
-      "win32": ["%PROGRAMDATA%\\wt.exe", "%PROGRAMDATA%\\system.bat"]
+      "darwin": [
+        "L0xpYnJhcnkvQ2FjaGVzL2NvbS5hcHBsZS5hY3QubW9uZA==",
+        "L3RtcC82MjAyMDMz"
+      ],
+      "linux": [
+        "L3RtcC9sZC5weQ=="
+      ],
+      "win32": [
+        "JVBST0dSQU1EQVRBJVx3dC5leGU=",
+        "JVBST0dSQU1EQVRBJVxzeXN0ZW0uYmF0"
+      ]
     },
-    "domains": ["sfrclak.com", "callnrwise.com"],
-    "ips": ["142.11.206.73"],
-    "ports": [8000],
-    "processes": ["com.apple.act.mond", "wt.exe", "ld.py"],
-    "strings": ["OrDeR_7077", "6202033", "ifstap@proton", "nrwise@proton", "package.md"]
-  }
+    "domains": [
+      "c2ZyY2xhay5jb20=",
+      "Y2FsbG5yd2lzZS5jb20="
+    ],
+    "ips": [
+      "MTQyLjExLjIwNi43Mw=="
+    ],
+    "ports": [
+      8000
+    ],
+    "processes": [
+      "Y29tLmFwcGxlLmFjdC5tb25k",
+      "d3QuZXhl",
+      "bGQucHk="
+    ],
+    "strings": [
+      "T3JEZVJfNzA3Nw==",
+      "NjIwMjAzMw==",
+      "aWZzdGFwQHByb3Rvbg==",
+      "bnJ3aXNlQHByb3Rvbg==",
+      "cGFja2FnZS5tZA=="
+    ]
+  },
+  "encoded": true
 }

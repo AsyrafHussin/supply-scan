@@ -9,16 +9,34 @@
   ],
   "packages": {
     "compromised": {
-      "ua-parser-js": ["0.7.29", "0.8.0", "1.0.0"]
+      "ua-parser-js": [
+        "0.7.29",
+        "0.8.0",
+        "1.0.0"
+      ]
     },
     "malicious": {}
   },
   "ioc": {
     "files": {
-      "linux": ["/tmp/jsextension"],
-      "win32": ["%TEMP%\\jsextension.exe", "%TEMP%\\create.dll", "%TEMP%\\sdd.dll"]
+      "linux": [
+        "L3RtcC9qc2V4dGVuc2lvbg=="
+      ],
+      "win32": [
+        "JVRFTVAlXGpzZXh0ZW5zaW9uLmV4ZQ==",
+        "JVRFTVAlXGNyZWF0ZS5kbGw=",
+        "JVRFTVAlXHNkZC5kbGw="
+      ]
     },
-    "ips": ["159.148.186.228", "194.76.225.46", "185.158.250.216", "45.11.180.153"],
-    "processes": ["jsextension"]
-  }
+    "ips": [
+      "MTU5LjE0OC4xODYuMjI4",
+      "MTk0Ljc2LjIyNS40Ng==",
+      "MTg1LjE1OC4yNTAuMjE2",
+      "NDUuMTEuMTgwLjE1Mw=="
+    ],
+    "processes": [
+      "anNleHRlbnNpb24="
+    ]
+  },
+  "encoded": true
 }

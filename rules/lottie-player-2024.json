@@ -9,11 +9,19 @@
   ],
   "packages": {
     "compromised": {
-      "@lottiefiles/lottie-player": ["2.0.5", "2.0.6", "2.0.7", "2.0.8"]
+      "@lottiefiles/lottie-player": [
+        "2.0.5",
+        "2.0.6",
+        "2.0.7",
+        "2.0.8"
+      ]
     },
     "malicious": {}
   },
   "ioc": {
-    "strings": ["connect wallet"]
-  }
+    "strings": [
+      "Y29ubmVjdCB3YWxsZXQ="
+    ]
+  },
+  "encoded": true
 }

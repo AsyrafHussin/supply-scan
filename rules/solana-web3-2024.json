@@ -9,12 +9,21 @@
   ],
   "packages": {
     "compromised": {
-      "@solana/web3.js": ["1.95.6", "1.95.7"]
+      "@solana/web3.js": [
+        "1.95.6",
+        "1.95.7"
+      ]
     },
     "malicious": {}
   },
   "ioc": {
-    "domains": ["sol-rpc.xyz"],
-    "strings": ["sol-rpc.xyz", "addToQueue"]
-  }
+    "domains": [
+      "c29sLXJwYy54eXo="
+    ],
+    "strings": [
+      "c29sLXJwYy54eXo=",
+      "YWRkVG9RdWV1ZQ=="
+    ]
+  },
+  "encoded": true
 }

@@ -39,14 +39,14 @@ const sym = {
 
 // ─── Banner ─────────────────────────────────────────────────────────
 
-export function banner(ruleCount: number): void {
+export function banner(ruleCount: number, version = '0.0.0'): void {
   const w = process.stdout.write.bind(process.stdout);
   w('\n');
   w(`${c.cyan}   ___ _   _ ___ ___ _   _   _    ___  ___   _   _  _ ${c.reset}\n`);
   w(`${c.cyan}  / __| | | | _ \\ _ \\ | | | | |  / __|/ __| /_\\ | \\| |${c.reset}\n`);
   w(`${c.cyan}  \\__ \\ |_| |  _/  _/ |_| |_| |_| (__| (__ / _ \\| .\` |${c.reset}\n`);
   w(`${c.cyan}  |___/\\___/|_| |_|  \\__, |_____|\\___|\\___|_/ \\_\\_|\\_|${c.reset}\n`);
-  w(`${c.cyan}                      |___/        ${c.dim}v1.0.0${c.reset}\n`);
+  w(`${c.cyan}                      |___/        ${c.dim}v${version}${c.reset}\n`);
   w('\n');
   w(`  ${c.white}Universal npm Supply Chain Attack Scanner${c.reset}\n`);
   w(`  ${c.dim}Detects ${ruleCount} known attacks | Zero dependencies${c.reset}\n`);

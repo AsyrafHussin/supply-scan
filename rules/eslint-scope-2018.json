@@ -9,13 +9,23 @@
   ],
   "packages": {
     "compromised": {
-      "eslint-scope": ["3.7.2"],
-      "eslint-config-eslint": ["5.0.2"]
+      "eslint-scope": [
+        "3.7.2"
+      ],
+      "eslint-config-eslint": [
+        "5.0.2"
+      ]
     },
     "malicious": {}
   },
   "ioc": {
-    "domains": ["pastebin.com"],
-    "strings": ["pastebin.com/raw/XLeVP82h", "_authToken"]
-  }
+    "domains": [
+      "cGFzdGViaW4uY29t"
+    ],
+    "strings": [
+      "cGFzdGViaW4uY29tL3Jhdy9YTGVWUDgyaA==",
+      "X2F1dGhUb2tlbg=="
+    ]
+  },
+  "encoded": true
 }

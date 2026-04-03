@@ -10,16 +10,35 @@
   ],
   "packages": {
     "compromised": {
-      "@ctrl/tinycolor": ["4.1.1"],
-      "duckdb": ["1.3.3"],
-      "@duckdb/node-api": ["1.3.3"],
-      "@duckdb/node-bindings": ["1.3.3"],
-      "@duckdb/duckdb-wasm": ["1.29.2"]
+      "@ctrl/tinycolor": [
+        "4.1.1"
+      ],
+      "duckdb": [
+        "1.3.3"
+      ],
+      "@duckdb/node-api": [
+        "1.3.3"
+      ],
+      "@duckdb/node-bindings": [
+        "1.3.3"
+      ],
+      "@duckdb/duckdb-wasm": [
+        "1.29.2"
+      ]
     },
     "malicious": {}
   },
   "ioc": {
-    "domains": ["webhook.site"],
-    "strings": ["setup_bun.js", "bun_environment.js", "Sha1-Hulud", "discussion.yaml", "webhook.site"]
-  }
+    "domains": [
+      "d2ViaG9vay5zaXRl"
+    ],
+    "strings": [
+      "c2V0dXBfYnVuLmpz",
+      "YnVuX2Vudmlyb25tZW50Lmpz",
+      "U2hhMS1IdWx1ZA==",
+      "ZGlzY3Vzc2lvbi55YW1s",
+      "d2ViaG9vay5zaXRl"
+    ]
+  },
+  "encoded": true
 }

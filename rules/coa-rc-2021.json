@@ -9,17 +9,42 @@
   ],
   "packages": {
     "compromised": {
-      "coa": ["2.0.3", "2.0.4", "2.1.1", "2.1.3", "3.0.1", "3.1.3"],
-      "rc": ["1.2.9", "1.3.9", "2.3.9"]
+      "coa": [
+        "2.0.3",
+        "2.0.4",
+        "2.1.1",
+        "2.1.3",
+        "3.0.1",
+        "3.1.3"
+      ],
+      "rc": [
+        "1.2.9",
+        "1.3.9",
+        "2.3.9"
+      ]
     },
     "malicious": {}
   },
   "ioc": {
     "files": {
-      "win32": ["%TEMP%\\compile.js", "%TEMP%\\compile.bat", "%TEMP%\\sdd.dll"]
+      "win32": [
+        "JVRFTVAlXGNvbXBpbGUuanM=",
+        "JVRFTVAlXGNvbXBpbGUuYmF0",
+        "JVRFTVAlXHNkZC5kbGw="
+      ]
     },
-    "domains": ["pastorcryptograph.at"],
-    "processes": ["compile.bat", "sdd.dll"],
-    "strings": ["pastorcryptograph.at", "compile.js", "compile.bat"]
-  }
+    "domains": [
+      "cGFzdG9yY3J5cHRvZ3JhcGguYXQ="
+    ],
+    "processes": [
+      "Y29tcGlsZS5iYXQ=",
+      "c2RkLmRsbA=="
+    ],
+    "strings": [
+      "cGFzdG9yY3J5cHRvZ3JhcGguYXQ=",
+      "Y29tcGlsZS5qcw==",
+      "Y29tcGlsZS5iYXQ="
+    ]
+  },
+  "encoded": true
 }
