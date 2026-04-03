@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-04-03
+
+### Fixed
+
+- Updated README with correct architecture, Node >=20 requirement, and package manager support table
+- Fixed Node version references in CONTRIBUTING.md and CHANGELOG.md (18 → 20)
+- Removed `NODE_AUTH_TOKEN` from publish workflow — uses OIDC Trusted Publisher
+- Dropped Node 18 from CI matrix (Vitest v4 requires Node 20+)
+- Linked LICENSE file in README
+
 ## [1.0.0] - 2026-04-03
 
 ### Added
