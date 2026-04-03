@@ -1,0 +1,27 @@
+{
+  "id": "test-rule-2024",
+  "name": "Test Rule",
+  "date": "2024-01-01",
+  "severity": "critical",
+  "description": "Test rule for unit tests",
+  "references": ["https://example.com"],
+  "packages": {
+    "compromised": {
+      "bad-pkg": ["1.0.0", "1.0.1"]
+    },
+    "malicious": {
+      "evil-pkg": ["0.0.1"]
+    }
+  },
+  "ioc": {
+    "files": {
+      "darwin": ["/tmp/__supply-scan-test-malware__"],
+      "linux": ["/tmp/__supply-scan-test-malware__"]
+    },
+    "domains": ["evil.example.com"],
+    "ips": ["192.0.2.1"],
+    "ports": [9999],
+    "processes": ["__supply-scan-test-evil__"],
+    "strings": ["TEST_IOC_STRING"]
+  }
+}

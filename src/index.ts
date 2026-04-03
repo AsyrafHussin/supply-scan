@@ -63,7 +63,7 @@ export async function run(argv: string[]): Promise<void> {
   }
 
   // Load rules
-  let allRules = loadRules(RULES_DIR);
+  const allRules = loadRules(RULES_DIR);
 
   if (allRules.length === 0) {
     console.error(`${ui.c.red}No rules found in ${RULES_DIR}${ui.c.reset}`);
