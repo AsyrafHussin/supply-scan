@@ -9,11 +9,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.3] - 2026-04-03
 
+### Added
+
+- Modern terminal UI with arrow-key interactive selects for rule and path selection
+- Truecolor support with graceful fallback to 256/16/no color
+- Text badges (PASS/FAIL/WARN/INFO) replacing emoji markers
+- Gradient banner coloring
+- `info()` and `success()` UI helpers for better scan feedback
+- "Entire home directory" scan option
+- Directory hints in path selection menu
+- Per-project version caching to avoid redundant file reads
+- Pre-compiled regex cache for lockfile scanning
+- Unit tests for all check modules (files, network, processes, cache) — 52 total tests
+- `escapeRegex()` shared utility
+- `discoverProjects()` helper to deduplicate project search pattern
+
 ### Fixed
 
 - Banner version now reads from package.json dynamically (was hardcoded)
 - Base64 encode IOC strings in rule files to prevent macOS XProtect false positives
 - Use Node 24 in publish workflow (npm 11.x with native OIDC support)
+- **Security:** Replace substring matching with regex word-boundary matching for IPs, domains, processes, and lockfile package names — eliminates false positives
+- **Security:** Shell injection prevention — use `runSafe()` (execFileSync) in processes.ts and cache.ts
+- **Security:** Windows hosts file path (`C:\Windows\System32\drivers\etc\hosts`) instead of hardcoded `/etc/hosts`
+- Multi-rule IOC attribution — `ruleByIOC` map now tracks all matching rules instead of overwriting
+- `passed` count in summary now correctly counts only pass-type results
+- Unhandled promise rejection at CLI entry — added `.catch()` handler
+- `progressBar` division by zero guard
+- `interactiveMultiSelect` cursor off-by-one bug
+- `interactiveMultiSelect` resolve logic — empty selection returns all (was broken ternary)
+- Cursor hide/show inconsistency — consistent `isTTY` guard via shared helpers
+
+### Changed
+
+- Split `utils.ts` into focused modules: `args.ts`, `rules.ts`, `shell.ts`, `prompt.ts`
+- Simplified section headers (divider-style instead of boxed)
+- Removed broken `drawBox` — summary uses clean line-based layout
+- `SKIP_DIRS` changed from Array to Set for O(1) lookup
+- `buildSummary` single-pass counting instead of 4 separate `.filter()` calls
+- Lockfile discovery uses `readdirSync` once per project instead of try/catch per file
+- Removed dead code: `ScanContext`, `getHomeDir()`, `severityColors` export
+- Removed unused re-exports from `utils.ts`
+- `run()` returns exit code instead of calling `process.exit()` directly — testable as library
 
 ## [1.0.2] - 2026-04-03
 

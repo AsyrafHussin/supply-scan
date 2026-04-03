@@ -91,21 +91,29 @@ function buildSummary(
   totalChecks: number
 ): ScanSummary {
   const compromisedProjects = new Set<string>();
+  let failCount = 0;
+  let warnCount = 0;
+  let passCount = 0;
+
   for (const r of results) {
-    if (r.type === 'fail' && r.details) {
-      const match = r.details.match(/— (.+)$/);
-      if (match) compromisedProjects.add(match[1]);
+    if (r.type === 'fail') {
+      failCount++;
+      if (r.details) {
+        const match = r.details.match(/— (.+)$/);
+        if (match) compromisedProjects.add(match[1]);
+      }
+    } else if (r.type === 'warn') {
+      warnCount++;
+    } else if (r.type === 'pass') {
+      passCount++;
     }
   }
-
-  const failCount = results.filter((r) => r.type === 'fail').length;
-  const warnCount = results.filter((r) => r.type === 'warn').length;
 
   return {
     projectsScanned,
     rulesChecked,
     totalChecks: results.length || totalChecks,
-    passed: results.length === 0 ? totalChecks : results.length - failCount - warnCount,
+    passed: results.length === 0 ? totalChecks : passCount,
     failed: failCount,
     warnings: warnCount,
     results,

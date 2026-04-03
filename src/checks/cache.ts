@@ -1,7 +1,8 @@
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { Rule, CheckResult } from '../types.js';
-import { dirExists, runCommand } from '../utils.js';
+import { dirExists } from '../utils.js';
+import { runCommand, runSafe } from '../shell.js';
 
 interface CacheLocation {
   name: string;
@@ -80,59 +81,51 @@ export function checkCache(rules: Rule[]): CheckResult[] {
   return results;
 }
 
+function findInCache(
+  cacheDir: string,
+  names: Map<string, string>,
+  type: 'd' | 'f'
+): Map<string, string> {
+  const hits = new Map<string, string>();
+  if (names.size === 0) return hits;
+
+  const nameExprs = Array.from(names.keys()).flatMap((n, i) =>
+    i === 0 ? ['-name', n] : ['-o', '-name', n]
+  );
+  const found = runSafe('find', [cacheDir, '-maxdepth', '4', '-type', type, '(', ...nameExprs, ')']);
+  if (found) {
+    for (const line of found.split('\n').filter(Boolean)) {
+      const name = line.split('/').pop() || '';
+      const ruleId = names.get(name);
+      if (ruleId) hits.set(name, ruleId);
+    }
+  }
+  return hits;
+}
+
 function scanCacheDir(
   cache: CacheLocation,
   maliciousPkgs: Map<string, string>,
   compromisedTarballs: Map<string, string>,
   results: CheckResult[]
 ): void {
-  // Find malicious package directories
-  if (maliciousPkgs.size > 0) {
-    const nameArgs = Array.from(maliciousPkgs.keys())
-      .map((n) => `-name "${n}"`)
-      .join(' -o ');
-    const found = runCommand(
-      `find "${cache.dir}" -maxdepth 4 -type d \\( ${nameArgs} \\) 2>/dev/null`
-    );
-    if (found) {
-      for (const line of found.split('\n').filter(Boolean)) {
-        const name = line.split('/').pop() || '';
-        const ruleId = maliciousPkgs.get(name);
-        if (ruleId) {
-          results.push({
-            type: 'fail',
-            rule: ruleId,
-            check: 'cache',
-            message: `Malicious package "${name}" found in ${cache.name} cache`,
-            details: `Run: ${cache.cleanCmd}`,
-          });
-        }
-      }
-    }
+  for (const [name, ruleId] of findInCache(cache.dir, maliciousPkgs, 'd')) {
+    results.push({
+      type: 'fail',
+      rule: ruleId,
+      check: 'cache',
+      message: `Malicious package "${name}" found in ${cache.name} cache`,
+      details: `Run: ${cache.cleanCmd}`,
+    });
   }
 
-  // Find compromised tarballs
-  if (compromisedTarballs.size > 0) {
-    const nameArgs = Array.from(compromisedTarballs.keys())
-      .map((n) => `-name "${n}"`)
-      .join(' -o ');
-    const found = runCommand(
-      `find "${cache.dir}" -maxdepth 4 -type f \\( ${nameArgs} \\) 2>/dev/null`
-    );
-    if (found) {
-      for (const line of found.split('\n').filter(Boolean)) {
-        const name = line.split('/').pop() || '';
-        const ruleId = compromisedTarballs.get(name);
-        if (ruleId) {
-          results.push({
-            type: 'warn',
-            rule: ruleId,
-            check: 'cache',
-            message: `Compromised tarball ${name} in ${cache.name} cache`,
-            details: `Run: ${cache.cleanCmd}`,
-          });
-        }
-      }
-    }
+  for (const [name, ruleId] of findInCache(cache.dir, compromisedTarballs, 'f')) {
+    results.push({
+      type: 'warn',
+      rule: ruleId,
+      check: 'cache',
+      message: `Compromised tarball ${name} in ${cache.name} cache`,
+      details: `Run: ${cache.cleanCmd}`,
+    });
   }
 }

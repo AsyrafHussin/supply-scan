@@ -56,11 +56,3 @@ export interface CLIOptions {
   version: boolean;
 }
 
-// ─── Check Context ──────────────────────────────────────────────────
-
-export interface ScanContext {
-  rules: Rule[];
-  projectDirs: string[];
-  os: string;
-  results: CheckResult[];
-}

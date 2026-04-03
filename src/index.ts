@@ -1,14 +1,10 @@
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import type { Rule } from './types.js';
-import {
-  parseArgs,
-  loadRules,
-  readJSON,
-  findProjects,
-  getCommonProjectDirs,
-  prompt,
-} from './utils.js';
+import { parseArgs } from './args.js';
+import { loadRules } from './rules.js';
+import { readJSON, findProjects, getCommonProjectDirs } from './utils.js';
+import { prompt } from './prompt.js';
 import * as ui from './ui.js';
 import { scan } from './scanner.js';
 
@@ -49,19 +45,19 @@ ${ui.c.yellow}EXAMPLES${ui.c.reset}
   npx supply-scan --ci --all
 `;
 
-export async function run(argv: string[]): Promise<void> {
+export async function run(argv: string[]): Promise<number> {
   const opts = parseArgs(argv);
 
   // Handle --version
   if (opts.version) {
     console.log(VERSION);
-    process.exit(0);
+    return 0;
   }
 
   // Handle --help
   if (opts.help) {
     console.log(HELP_TEXT);
-    process.exit(0);
+    return 0;
   }
 
   // Load rules
@@ -69,14 +65,14 @@ export async function run(argv: string[]): Promise<void> {
 
   if (allRules.length === 0) {
     console.error(`${ui.c.red}No rules found in ${RULES_DIR}${ui.c.reset}`);
-    process.exit(1);
+    return 1;
   }
 
   // Handle --list
   if (opts.list) {
     ui.banner(allRules.length, VERSION);
     ui.printRuleList(allRules);
-    process.exit(0);
+    return 0;
   }
 
   // Filter rules if --rule specified
@@ -85,7 +81,7 @@ export async function run(argv: string[]): Promise<void> {
     selectedRules = allRules.filter((r) => opts.rules.includes(r.id));
     if (selectedRules.length === 0) {
       console.error(`${ui.c.red}No matching rules found. Use --list to see available rules.${ui.c.reset}`);
-      process.exit(1);
+      return 1;
     }
   } else if (opts.all || opts.ci) {
     selectedRules = allRules;
@@ -103,20 +99,16 @@ export async function run(argv: string[]): Promise<void> {
   let projectDirs: string[];
 
   if (opts.path) {
-    if (!opts.ci) ui.spinnerStart('Searching for npm projects...');
-    projectDirs = findProjects([opts.path]);
-    if (!opts.ci) ui.spinnerStop();
+    projectDirs = discoverProjects([opts.path], opts.ci);
   } else if (opts.ci || opts.all) {
-    // Default to current directory in non-interactive modes
-    if (!opts.ci) ui.spinnerStart('Searching for npm projects...');
-    projectDirs = findProjects([process.cwd()]);
-    if (!opts.ci) ui.spinnerStop();
+    projectDirs = discoverProjects([process.cwd()], opts.ci);
   } else {
     projectDirs = await interactivePathSelection();
   }
 
   if (!opts.ci) {
-    console.log(`\n   ${ui.c.dim}Scanning ${projectDirs.length} projects with ${selectedRules.length} rules...${ui.c.reset}`);
+    console.log('');
+    ui.info(`Scanning ${projectDirs.length} projects with ${selectedRules.length} rules...`);
   }
 
   // Run scan
@@ -133,15 +125,25 @@ export async function run(argv: string[]): Promise<void> {
 
   // Exit code
   if (summary.failed > 0) {
-    process.exit(1);
+    return 1;
   } else if (summary.warnings > 0) {
-    process.exit(2);
+    return 2;
   } else {
     if (opts.ci) {
       console.log('OK');
     }
-    process.exit(0);
+    return 0;
   }
+}
+
+function discoverProjects(dirs: string[], ci: boolean): string[] {
+  if (!ci) ui.spinnerStart('Searching for npm projects...');
+  const projects = findProjects(dirs);
+  if (!ci) {
+    ui.spinnerStop();
+    ui.success(`Found ${projects.length} projects`);
+  }
+  return projects;
 }
 
 // ─── Interactive Prompts ────────────────────────────────────────────
@@ -161,12 +163,12 @@ async function interactiveRuleSelection(rules: Rule[]): Promise<Rule[]> {
 }
 
 async function interactivePathSelection(): Promise<string[]> {
-  console.log('');
   const choice = await ui.interactiveSingleSelect({
     message: 'Where should I scan?',
     items: [
-      { label: 'Current directory', value: 'cwd' as const },
-      { label: 'Common project directories', value: 'common' as const },
+      { label: 'Current directory', value: 'cwd' as const, hint: process.cwd() },
+      { label: 'Common project directories', value: 'common' as const, hint: 'Desktop, Projects, dev...' },
+      { label: 'Entire home directory', value: 'home' as const, hint: '(slower)' },
       { label: 'Enter a custom path', value: 'custom' as const },
     ],
   });
@@ -176,9 +178,19 @@ async function interactivePathSelection(): Promise<string[]> {
     case 'common':
       baseDirs = getCommonProjectDirs();
       if (baseDirs.length === 0) {
-        console.log(`   ${ui.c.dim}No common directories found, scanning current directory...${ui.c.reset}`);
+        ui.info('No common directories found, scanning current directory...');
         baseDirs = [process.cwd()];
+      } else {
+        ui.info(`Scanning ${baseDirs.length} directories:`);
+        for (const d of baseDirs.slice(0, 5)) {
+          console.log(`     ${ui.c.dim}${d}${ui.c.reset}`);
+        }
+        if (baseDirs.length > 5) console.log(`     ${ui.c.dim}...and ${baseDirs.length - 5} more${ui.c.reset}`);
       }
+      break;
+    case 'home':
+      baseDirs = [process.env.HOME || '/'];
+      ui.info(`Scanning home directory (this may take a while)...`);
       break;
     case 'custom': {
       const customPath = await prompt(`\n   ${ui.c.cyan}Enter path:${ui.c.reset} `);
@@ -193,18 +205,24 @@ async function interactivePathSelection(): Promise<string[]> {
   ui.spinnerStart('Searching for npm projects...');
   const projects = findProjects(baseDirs);
   ui.spinnerStop();
-
-  console.log(`   ${ui.c.dim}Found ${projects.length} npm projects${ui.c.reset}`);
+  ui.success(`Found ${projects.length} npm projects`);
 
   return projects;
 }
 
 // ─── Auto-run when executed as CLI ──────────────────────────────────
 
+// CLI entry — only runs when executed directly (not imported as library)
 const isCLI =
-  process.argv[1]?.includes('supply-scan') ||
-  process.argv[1]?.includes('dist/index');
+  process.argv[1]?.endsWith('supply-scan') ||
+  process.argv[1]?.endsWith('dist/index.js') ||
+  process.argv[1]?.includes('/supply-scan/');
 
 if (isCLI) {
-  run(process.argv.slice(2));
+  run(process.argv.slice(2))
+    .then((code) => process.exit(code))
+    .catch((err) => {
+      console.error(`${ui.c.red}Error: ${err instanceof Error ? err.message : err}${ui.c.reset}`);
+      process.exit(1);
+    });
 }

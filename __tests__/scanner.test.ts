@@ -4,7 +4,6 @@ import { loadRules } from '../src/utils.js';
 
 vi.mock('../src/ui.js', () => ({
   c: { red: '', green: '', yellow: '', cyan: '', white: '', dim: '', bold: '', reset: '', bgRed: '', bgGreen: '', bgYellow: '', bgBlue: '', reverse: '' },
-  severityColors: {},
   sectionHeader: vi.fn(),
   divider: vi.fn(),
   result: vi.fn(),

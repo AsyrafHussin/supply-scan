@@ -1,41 +1,42 @@
 import type { Rule, CheckResult } from '../types.js';
-import { getOS, runCommand, dirExists } from '../utils.js';
+import { getOS, dirExists, escapeRegex } from '../utils.js';
+import { runCommand, runSafe } from '../shell.js';
 
-/**
- * Check for known malicious processes running on the system.
- */
 export function checkProcesses(rules: Rule[]): CheckResult[] {
   const results: CheckResult[] = [];
   const os = getOS();
 
-  // Collect all process patterns from rules
-  const processPatterns = new Map<string, string>(); // pattern -> ruleId
+  // Collect process patterns — support multiple rules per pattern
+  const rulesByProcess = new Map<string, string[]>();
 
   for (const rule of rules) {
     for (const proc of rule.ioc.processes ?? []) {
-      processPatterns.set(proc, rule.id);
+      const arr = rulesByProcess.get(proc) || [];
+      arr.push(rule.id);
+      rulesByProcess.set(proc, arr);
     }
   }
 
-  if (processPatterns.size === 0) return results;
+  if (rulesByProcess.size === 0) return results;
 
-  // Get running processes
-  const processList = getProcessList(os);
-  if (!processList) return results;
+  const processLines = getProcessList(os).split('\n');
+  if (processLines.length === 0) return results;
 
-  for (const [pattern, ruleId] of processPatterns) {
-    if (processList.includes(pattern)) {
+  for (const [pattern, ruleIds] of rulesByProcess) {
+    // Use word-boundary regex to avoid partial matches
+    // e.g., "ld.py" should not match "/usr/build.py"
+    const regex = new RegExp(`(?:^|[\\s/])${escapeRegex(pattern)}(?:\\s|$)`);
+    if (processLines.some((line) => regex.test(line))) {
       results.push({
         type: 'fail',
-        rule: ruleId,
+        rule: ruleIds[0],
         check: 'processes',
         message: `Suspicious process running: ${pattern}`,
-        details: 'This may indicate an active compromise',
+        details: `Rules: ${ruleIds.join(', ')} — May indicate active compromise`,
       });
     }
   }
 
-  // Check macOS persistence mechanisms
   if (os === 'darwin') {
     checkMacOSPersistence(rules, results);
   }
@@ -59,7 +60,6 @@ function checkMacOSPersistence(rules: Rule[], results: CheckResult[]): void {
     '/Library/LaunchDaemons',
   ];
 
-  // Collect all IOC strings to search for
   const searchStrings = new Map<string, string>();
   for (const rule of rules) {
     for (const s of rule.ioc.strings ?? []) {
@@ -77,14 +77,11 @@ function checkMacOSPersistence(rules: Rule[], results: CheckResult[]): void {
   if (existingDirs.length === 0 || searchStrings.size === 0) return;
 
   const pattern = Array.from(searchStrings.keys()).join('|');
-  const hits = runCommand(
-    `grep -rlE "${pattern}" ${existingDirs.map((d) => `"${d}"`).join(' ')} 2>/dev/null`
-  );
+  const hits = runSafe('grep', ['-rlE', pattern, ...existingDirs]);
 
   if (hits) {
     for (const file of hits.split('\n').filter(Boolean)) {
-      // Find which rule matched
-      const content = runCommand(`cat "${file}" 2>/dev/null`);
+      const content = runSafe('cat', [file]);
       let matchedRule = 'unknown';
       for (const [s, ruleId] of searchStrings) {
         if (content.includes(s)) { matchedRule = ruleId; break; }
