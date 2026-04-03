@@ -145,4 +145,4 @@ supply-scan/
 
 ## License
 
-MIT
+[MIT](LICENSE)
