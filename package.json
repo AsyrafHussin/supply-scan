@@ -33,7 +33,7 @@
     "rules/"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "scripts": {
     "build": "tsup",
