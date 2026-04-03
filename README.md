@@ -6,6 +6,8 @@ Universal npm supply chain attack scanner. Detects compromised packages from **1
 npx supply-scan
 ```
 
+> Requires Node.js >= 20
+
 ## What It Detects
 
 | Attack | Date | Severity | Type |
@@ -29,7 +31,17 @@ npx supply-scan
 2. **Malware Files** — Checks for RAT payloads, droppers, and artifacts on disk
 3. **Network Connections** — Detects active connections to C2 servers
 4. **Suspicious Processes** — Identifies running malware and persistence mechanisms
-5. **NPM Cache** — Scans npm cache for malicious packages
+5. **Package Manager Caches** — Scans npm, pnpm, yarn, and bun caches for malicious packages
+
+## Supported Package Managers
+
+| Manager | Lockfile | Cache |
+|---------|----------|-------|
+| npm | `package-lock.json` | `~/.npm` |
+| pnpm | `pnpm-lock.yaml` | pnpm store |
+| yarn v1 | `yarn.lock` | yarn cache dir |
+| yarn v2+ | `yarn.lock` | `.yarn/cache` |
+| bun | `bun.lock` / `bun.lockb` | `~/.bun/install/cache` |
 
 ## Usage
 
@@ -112,36 +124,36 @@ Each attack is defined as a JSON file in the `rules/` directory. To add a new at
 }
 ```
 
-No code changes needed — the scanner automatically picks up new rule files.
+No code changes needed — the scanner automatically picks up new rule files. See [docs/RULES.md](docs/RULES.md) for the complete schema reference.
 
 ## Architecture
 
 ```
 supply-scan/
-├── bin/supply-scan.js       # CLI entry point
 ├── src/                     # TypeScript source
-│   ├── index.ts             # Main orchestrator + CLI
-│   ├── scanner.ts           # Scan engine
-│   ├── ui.ts                # Terminal UI (zero deps)
-│   ├── utils.ts             # Utilities
+│   ├── index.ts             # CLI entry + interactive prompts
+│   ├── scanner.ts           # Scan engine orchestrator
+│   ├── ui.ts                # Terminal UI (zero deps, ANSI codes)
+│   ├── utils.ts             # Utilities (args, paths, JSON, etc.)
 │   ├── types.ts             # TypeScript interfaces
 │   └── checks/
-│       ├── packages.ts      # Package/lockfile scanner
+│       ├── packages.ts      # Package + lockfile scanner
 │       ├── files.ts         # Malware file detector
 │       ├── network.ts       # C2 connection checker
-│       ├── processes.ts     # Process scanner
-│       └── cache.ts         # npm cache scanner
+│       ├── processes.ts     # Process + persistence scanner
+│       └── cache.ts         # Package manager cache scanner
 ├── rules/                   # Attack definitions (JSON)
-└── dist/                    # Compiled JavaScript
+├── __tests__/               # Unit tests (Vitest)
+├── docs/                    # Rule writing guide
+├── .github/workflows/       # CI + publish + dependency review
+└── dist/                    # Compiled output (tsup, single file)
 ```
 
 **Zero runtime dependencies.** This is a security scanner — we don't depend on packages that could themselves be compromised.
 
 ## Contributing
 
-1. Fork the repository
-2. Add a new rule JSON file in `rules/`
-3. Submit a pull request with a reference link to the attack advisory
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, how to add new attack rules, and PR guidelines.
 
 ## License
 

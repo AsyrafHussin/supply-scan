@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - JSON rule-driven architecture for easy extensibility
 - Zero runtime dependencies
 - Unit tests with Vitest (41 tests)
-- CI pipeline with GitHub Actions (Node 18/20/22 matrix)
+- CI pipeline with GitHub Actions (Node 20/22/24 matrix)
 - Automated npm publishing workflow on tag push
 - Dependency review workflow for PRs
 - ESLint v9 + Prettier for code quality

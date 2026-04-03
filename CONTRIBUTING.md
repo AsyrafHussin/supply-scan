@@ -6,7 +6,7 @@ Thank you for your interest in contributing to supply-scan! This guide will help
 
 ### Prerequisites
 
-- Node.js >= 18
+- Node.js >= 20
 - npm
 
 ### Setup
