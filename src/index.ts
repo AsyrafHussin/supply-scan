@@ -148,53 +148,40 @@ export async function run(argv: string[]): Promise<void> {
 
 async function interactiveRuleSelection(rules: Rule[]): Promise<Rule[]> {
   console.log('');
-  console.log(`   ${ui.c.white}Select attacks to scan:${ui.c.reset}`);
-  console.log('');
-  console.log(`   ${ui.c.cyan}0${ui.c.reset}) ${ui.c.green}All attacks (${rules.length} rules)${ui.c.reset}`);
-
-  for (let i = 0; i < rules.length; i++) {
-    const r = rules[i];
-    const sc = ui.severityColors[r.severity] || ui.c.dim;
-    console.log(`   ${ui.c.cyan}${i + 1}${ui.c.reset}) ${r.name} ${sc}(${r.severity})${ui.c.reset}`);
-  }
-
-  console.log('');
-  const answer = await prompt(`   ${ui.c.yellow}Enter numbers separated by commas (default=0): ${ui.c.reset}`);
-
-  if (!answer || answer === '0') {
-    return rules;
-  }
-
-  const indices = answer.split(',').map((s) => parseInt(s.trim(), 10) - 1);
-  const selected = indices
-    .filter((i) => i >= 0 && i < rules.length)
-    .map((i) => rules[i]);
-
+  const selected = await ui.interactiveMultiSelect({
+    message: 'Select attacks to scan:',
+    items: rules.map((r) => ({
+      label: r.name,
+      value: r,
+      hint: `${r.severity}  ${r.date}`,
+    })),
+    allOption: { label: `All attacks (${rules.length} rules)` },
+  });
   return selected.length > 0 ? selected : rules;
 }
 
 async function interactivePathSelection(): Promise<string[]> {
   console.log('');
-  console.log(`   ${ui.c.white}Where should I scan?${ui.c.reset}`);
-  console.log('');
-  console.log(`   ${ui.c.cyan}1${ui.c.reset}) Current directory`);
-  console.log(`   ${ui.c.cyan}2${ui.c.reset}) Common project directories`);
-  console.log(`   ${ui.c.cyan}3${ui.c.reset}) Enter a custom path`);
-  console.log('');
-
-  const choice = await prompt(`   ${ui.c.yellow}Choose (1/2/3, default=1): ${ui.c.reset}`);
+  const choice = await ui.interactiveSingleSelect({
+    message: 'Where should I scan?',
+    items: [
+      { label: 'Current directory', value: 'cwd' as const },
+      { label: 'Common project directories', value: 'common' as const },
+      { label: 'Enter a custom path', value: 'custom' as const },
+    ],
+  });
 
   let baseDirs: string[];
   switch (choice) {
-    case '2':
+    case 'common':
       baseDirs = getCommonProjectDirs();
       if (baseDirs.length === 0) {
         console.log(`   ${ui.c.dim}No common directories found, scanning current directory...${ui.c.reset}`);
         baseDirs = [process.cwd()];
       }
       break;
-    case '3': {
-      const customPath = await prompt(`   ${ui.c.cyan}Enter path: ${ui.c.reset}`);
+    case 'custom': {
+      const customPath = await prompt(`\n   ${ui.c.cyan}Enter path:${ui.c.reset} `);
       baseDirs = [customPath.replace(/^~/, process.env.HOME || '')];
       break;
     }

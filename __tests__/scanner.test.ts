@@ -3,7 +3,7 @@ import { FIXTURE_RULES } from './helpers.js';
 import { loadRules } from '../src/utils.js';
 
 vi.mock('../src/ui.js', () => ({
-  c: { red: '', green: '', yellow: '', cyan: '', white: '', dim: '', bold: '', reset: '', bgRed: '', bgGreen: '', bgYellow: '', bgBlue: '' },
+  c: { red: '', green: '', yellow: '', cyan: '', white: '', dim: '', bold: '', reset: '', bgRed: '', bgGreen: '', bgYellow: '', bgBlue: '', reverse: '' },
   severityColors: {},
   sectionHeader: vi.fn(),
   divider: vi.fn(),
@@ -16,6 +16,8 @@ vi.mock('../src/ui.js', () => ({
   banner: vi.fn(),
   printRuleList: vi.fn(),
   printSummary: vi.fn(),
+  interactiveMultiSelect: vi.fn(),
+  interactiveSingleSelect: vi.fn(),
 }));
 
 vi.mock('../src/checks/files.js', () => ({
