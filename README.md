@@ -8,6 +8,16 @@ npx supply-scan
 
 > Requires Node.js >= 20
 
+## Features
+
+- **Interactive CLI** — Arrow-key rule selection and path picker
+- **12 attack rules** — Axios, Chalk/Debug, Shai-Hulud, GlassWorm, and more
+- **5 check categories** — Packages, malware files, network, processes, caches
+- **All package managers** — npm, pnpm, yarn (v1 & v2+), bun
+- **CI mode** — Non-interactive with exit codes for pipelines
+- **Zero runtime deps** — Security scanner that doesn't depend on potentially compromised packages
+- **Extensible** — Add new attacks by dropping a JSON file in `rules/`
+
 ## What It Detects
 
 | Attack | Date | Severity | Type |
@@ -29,7 +39,7 @@ npx supply-scan
 
 1. **Compromised Packages** — Scans `node_modules` and lockfiles for known bad versions
 2. **Malware Files** — Checks for RAT payloads, droppers, and artifacts on disk
-3. **Network Connections** — Detects active connections to C2 servers
+3. **Network Connections** — Detects active connections to C2 servers (regex word-boundary matching)
 4. **Suspicious Processes** — Identifies running malware and persistence mechanisms
 5. **Package Manager Caches** — Scans npm, pnpm, yarn, and bun caches for malicious packages
 
@@ -51,7 +61,7 @@ npx supply-scan
 npx supply-scan
 ```
 
-Prompts you to select which attacks to scan for and which directories to scan.
+Uses arrow keys to select which attacks to scan and which directories to scan.
 
 ### Scan All Attacks
 
@@ -130,11 +140,15 @@ No code changes needed — the scanner automatically picks up new rule files. Se
 
 ```
 supply-scan/
-├── src/                     # TypeScript source
+├── src/
 │   ├── index.ts             # CLI entry + interactive prompts
 │   ├── scanner.ts           # Scan engine orchestrator
-│   ├── ui.ts                # Terminal UI (zero deps, ANSI codes)
-│   ├── utils.ts             # Utilities (args, paths, JSON, etc.)
+│   ├── ui.ts                # Terminal UI (zero deps, ANSI + truecolor)
+│   ├── args.ts              # CLI argument parser
+│   ├── rules.ts             # Rule loader + base64 decoder
+│   ├── shell.ts             # Safe shell command execution
+│   ├── prompt.ts            # Readline prompt helper
+│   ├── utils.ts             # Path/fs utilities
 │   ├── types.ts             # TypeScript interfaces
 │   └── checks/
 │       ├── packages.ts      # Package + lockfile scanner
@@ -142,14 +156,15 @@ supply-scan/
 │       ├── network.ts       # C2 connection checker
 │       ├── processes.ts     # Process + persistence scanner
 │       └── cache.ts         # Package manager cache scanner
-├── rules/                   # Attack definitions (JSON)
-├── __tests__/               # Unit tests (Vitest)
+├── rules/                   # Attack definitions (JSON, base64-encoded IOCs)
+├── __tests__/               # Unit tests (Vitest, 52 tests)
+├── scripts/                 # Rule encoding utility
 ├── docs/                    # Rule writing guide
-├── .github/workflows/       # CI + publish + dependency review
+├── .github/workflows/       # CI (Node 20/22/24) + npm publish + dependency review
 └── dist/                    # Compiled output (tsup, single file)
 ```
 
-**Zero runtime dependencies.** This is a security scanner — we don't depend on packages that could themselves be compromised.
+**Zero runtime dependencies.** This is a security scanner — we don't depend on packages that could themselves be compromised. All terminal UI uses raw ANSI escape codes with truecolor support and graceful fallback.
 
 ## Contributing
 
