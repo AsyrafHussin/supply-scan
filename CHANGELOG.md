@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed `NODE_AUTH_TOKEN` from publish workflow — uses OIDC Trusted Publisher
 - Dropped Node 18 from CI matrix (Vitest v4 requires Node 20+)
 - Linked LICENSE file in README
+- Fixed npm publish workflow to use OIDC trusted publishing (npm >= 11.5.1)
 
 ## [1.0.0] - 2026-04-03
 
