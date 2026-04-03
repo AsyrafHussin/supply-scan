@@ -1,6 +1,6 @@
 {
   "name": "supply-scan",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Universal npm supply chain attack scanner. Detects compromised packages from 12+ known attacks.",
   "keywords": [
     "security",

@@ -2,6 +2,13 @@
 
 Universal npm supply chain attack scanner. Detects compromised packages from **12 known attacks** spanning 2018-2026. Zero runtime dependencies.
 
+[![Version](https://img.shields.io/npm/v/supply-scan.svg)](https://npmjs.org/package/supply-scan)
+[![Downloads/week](https://img.shields.io/npm/dw/supply-scan.svg)](https://npmjs.org/package/supply-scan)
+[![NPM total downloads](https://img.shields.io/npm/dt/supply-scan.svg?style=flat)](https://www.npmjs.com/package/supply-scan)
+[![License](https://img.shields.io/npm/l/supply-scan.svg)](https://github.com/AsyrafHussin/supply-scan/blob/main/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![GitHub Workflow Status](https://github.com/AsyrafHussin/supply-scan/actions/workflows/ci.yml/badge.svg)](https://github.com/AsyrafHussin/supply-scan/actions)
+
 ```bash
 npx supply-scan
 ```
