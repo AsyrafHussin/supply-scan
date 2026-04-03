@@ -1,0 +1,28 @@
+{
+  "id": "node-ipc-2022",
+  "name": "node-ipc / peacenotwar Wiper",
+  "date": "2022-03-15",
+  "severity": "critical",
+  "description": "CVE-2022-23812 — Geotargeted file wiper (Russia/Belarus) + protest file dropper. CVSS 9.8.",
+  "references": [
+    "https://snyk.io/blog/peacenotwar-malicious-npm-node-ipc-package-vulnerability/",
+    "https://github.com/advisories/GHSA-97m3-w2cp-4xx6"
+  ],
+  "packages": {
+    "compromised": {
+      "node-ipc": ["10.1.1", "10.1.2", "9.2.2"]
+    },
+    "malicious": {
+      "peacenotwar": ["9.1.3", "9.1.5", "9.1.6"]
+    }
+  },
+  "ioc": {
+    "files": {
+      "darwin": ["~/Desktop/WITH-LOVE-FROM-AMERICA.txt"],
+      "linux": ["~/Desktop/WITH-LOVE-FROM-AMERICA.txt"],
+      "win32": ["%USERPROFILE%\\Desktop\\WITH-LOVE-FROM-AMERICA.txt"]
+    },
+    "domains": ["api.ipgeolocation.io"],
+    "strings": ["ssl-geospec.js", "WITH-LOVE-FROM-AMERICA", "peacenotwar"]
+  }
+}

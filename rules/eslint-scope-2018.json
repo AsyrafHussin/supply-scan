@@ -1,0 +1,21 @@
+{
+  "id": "eslint-scope-2018",
+  "name": "eslint-scope Token Stealer",
+  "date": "2018-07-12",
+  "severity": "high",
+  "description": "Malicious postinstall script in eslint-scope stole npm tokens from .npmrc files",
+  "references": [
+    "https://eslint.org/blog/2018/07/postmortem-for-malicious-package-publishes/"
+  ],
+  "packages": {
+    "compromised": {
+      "eslint-scope": ["3.7.2"],
+      "eslint-config-eslint": ["5.0.2"]
+    },
+    "malicious": {}
+  },
+  "ioc": {
+    "domains": ["pastebin.com"],
+    "strings": ["pastebin.com/raw/XLeVP82h", "_authToken"]
+  }
+}

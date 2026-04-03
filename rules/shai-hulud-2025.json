@@ -1,0 +1,25 @@
+{
+  "id": "shai-hulud-2025",
+  "name": "Shai-Hulud 2.0 Worm",
+  "date": "2025-11-24",
+  "severity": "critical",
+  "description": "Self-replicating npm worm — credential harvester, secret scanner, dead man's switch wiper. 796 packages compromised.",
+  "references": [
+    "https://unit42.paloaltonetworks.com/npm-supply-chain-attack/",
+    "https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/"
+  ],
+  "packages": {
+    "compromised": {
+      "@ctrl/tinycolor": ["4.1.1"],
+      "duckdb": ["1.3.3"],
+      "@duckdb/node-api": ["1.3.3"],
+      "@duckdb/node-bindings": ["1.3.3"],
+      "@duckdb/duckdb-wasm": ["1.29.2"]
+    },
+    "malicious": {}
+  },
+  "ioc": {
+    "domains": ["webhook.site"],
+    "strings": ["setup_bun.js", "bun_environment.js", "Sha1-Hulud", "discussion.yaml", "webhook.site"]
+  }
+}

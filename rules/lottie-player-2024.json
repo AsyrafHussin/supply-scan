@@ -1,0 +1,19 @@
+{
+  "id": "lottie-player-2024",
+  "name": "Lottie Player Wallet Drainer",
+  "date": "2024-10-30",
+  "severity": "high",
+  "description": "Lottie Player npm package compromised — injected crypto wallet drainer popup into web pages",
+  "references": [
+    "https://cycode.com/blog/lottie-web-player-malicious-package/"
+  ],
+  "packages": {
+    "compromised": {
+      "@lottiefiles/lottie-player": ["2.0.5", "2.0.6", "2.0.7", "2.0.8"]
+    },
+    "malicious": {}
+  },
+  "ioc": {
+    "strings": ["connect wallet"]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "axios-2026",
+  "name": "Axios Supply Chain Attack",
+  "date": "2026-03-31",
+  "severity": "critical",
+  "description": "North Korea (UNC1069/Sapphire Sleet) compromised axios npm account, injected cross-platform RAT via plain-crypto-js",
+  "references": [
+    "https://unit42.paloaltonetworks.com/axios-supply-chain-attack/",
+    "https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package"
+  ],
+  "packages": {
+    "compromised": {
+      "axios": ["1.14.1", "0.30.4"]
+    },
+    "malicious": {
+      "plain-crypto-js": ["4.2.0", "4.2.1"]
+    }
+  },
+  "ioc": {
+    "files": {
+      "darwin": ["/Library/Caches/com.apple.act.mond", "/tmp/6202033"],
+      "linux": ["/tmp/ld.py"],
+      "win32": ["%PROGRAMDATA%\\wt.exe", "%PROGRAMDATA%\\system.bat"]
+    },
+    "domains": ["sfrclak.com", "callnrwise.com"],
+    "ips": ["142.11.206.73"],
+    "ports": [8000],
+    "processes": ["com.apple.act.mond", "wt.exe", "ld.py"],
+    "strings": ["OrDeR_7077", "6202033", "ifstap@proton", "nrwise@proton", "package.md"]
+  }
+}

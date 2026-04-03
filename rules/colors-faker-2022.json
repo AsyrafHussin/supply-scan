@@ -1,0 +1,20 @@
+{
+  "id": "colors-faker-2022",
+  "name": "colors/faker Sabotage",
+  "date": "2022-01-09",
+  "severity": "medium",
+  "description": "Maintainer sabotage — colors prints infinite LIBERTY loop, faker exports purged. Denial of service.",
+  "references": [
+    "https://www.sonatype.com/blog/npm-libraries-colors-and-faker-sabotaged-in-protest-by-their-maintainer-what-to-do-now"
+  ],
+  "packages": {
+    "compromised": {
+      "colors": ["1.4.1", "1.4.2"],
+      "faker": ["6.6.6"]
+    },
+    "malicious": {}
+  },
+  "ioc": {
+    "strings": ["LIBERTY LIBERTY LIBERTY"]
+  }
+}

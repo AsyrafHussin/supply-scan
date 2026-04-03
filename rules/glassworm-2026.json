@@ -1,0 +1,25 @@
+{
+  "id": "glassworm-2026",
+  "name": "GlassWorm Campaign",
+  "date": "2026-03-18",
+  "severity": "critical",
+  "description": "433 components compromised across GitHub/npm/VSCode. Uses invisible Unicode and Solana blockchain as C2 dead-drop.",
+  "references": [
+    "https://www.aikido.dev/blog/glassworm-returns-unicode-attack-github-npm-vscode",
+    "https://www.sonatype.com/blog/hijacked-npm-packages-deliver-malware-via-solana-linked-to-glassworm"
+  ],
+  "packages": {
+    "compromised": {
+      "react-native-international-phone-number": ["0.12.1", "0.12.2", "0.12.3"],
+      "react-native-country-select": ["0.3.91"],
+      "@aifabrix/miso-client": ["4.7.2"]
+    },
+    "malicious": {
+      "@iflow-mcp/watercrawl-watercrawl-mcp": ["1.3.0", "1.3.1", "1.3.2", "1.3.3", "1.3.4"]
+    }
+  },
+  "ioc": {
+    "ips": ["45.32.150.251"],
+    "strings": ["6YGcuyFRJKZtcaYCCFba9fScNUvPkGXodXE1mJiSzqDJ", "install.js"]
+  }
+}

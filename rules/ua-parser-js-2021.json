@@ -1,0 +1,24 @@
+{
+  "id": "ua-parser-js-2021",
+  "name": "ua-parser-js Hijack",
+  "date": "2021-10-22",
+  "severity": "critical",
+  "description": "Popular ua-parser-js hijacked to deploy XMRig cryptominer and Danabot password stealer",
+  "references": [
+    "https://github.com/nicedoc/ua-parser-js/issues/536"
+  ],
+  "packages": {
+    "compromised": {
+      "ua-parser-js": ["0.7.29", "0.8.0", "1.0.0"]
+    },
+    "malicious": {}
+  },
+  "ioc": {
+    "files": {
+      "linux": ["/tmp/jsextension"],
+      "win32": ["%TEMP%\\jsextension.exe", "%TEMP%\\create.dll", "%TEMP%\\sdd.dll"]
+    },
+    "ips": ["159.148.186.228", "194.76.225.46", "185.158.250.216", "45.11.180.153"],
+    "processes": ["jsextension"]
+  }
+}

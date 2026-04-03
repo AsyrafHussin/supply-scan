@@ -1,0 +1,22 @@
+{
+  "id": "event-stream-2018",
+  "name": "event-stream / flatmap-stream",
+  "date": "2018-11-26",
+  "severity": "high",
+  "description": "Targeted attack on Copay Bitcoin wallet via injected flatmap-stream dependency in event-stream",
+  "references": [
+    "https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident"
+  ],
+  "packages": {
+    "compromised": {
+      "event-stream": ["3.3.6"]
+    },
+    "malicious": {
+      "flatmap-stream": ["0.1.1"]
+    }
+  },
+  "ioc": {
+    "ips": ["111.90.151.134"],
+    "domains": ["copayapi.host"]
+  }
+}
